@@ -92,11 +92,15 @@ public class HttpsConnectionCertificateCheck {
                 Certificate[] certs = connection.getServerCertificates();
                 for (Certificate cert : certs) {
                     System.out.println("Certificate Type : " + cert.getType());
+                   
                     System.out.println("Certificate Hash Code : " + cert.hashCode());
                     System.out.println("Certificate Public Key Algorithm : "
                             + cert.getPublicKey().getAlgorithm());
                     System.out.println("Certificate Public Key Format : "
                             + cert.getPublicKey().getFormat());
+                    System.out.println("\n~~~~~~~~~~~~~~~~~~~ BEGIN: Certificate ~~~~~~~~~~~~~~~~~~~~~~~~");
+                    System.out.println(cert.toString());
+                    System.out.println("\n~~~~~~~~~~~~~~~~~~~ END: Certificate ~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                 }
             } catch (SSLHandshakeException e) {
                 System.err.println("Please check the ciphers on the certificate to see if they are supported in your JDK version.");
