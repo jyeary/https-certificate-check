@@ -26,6 +26,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
@@ -41,6 +42,8 @@ public class HttpsConnectionCertificateCheck {
      */
     private static String PARSED_CMDLINE_URL;
 
+    private static boolean PRINT_CERTIFICATES;
+
     /**
      * Main application entry point.
      *
@@ -51,10 +54,12 @@ public class HttpsConnectionCertificateCheck {
         CommandLineParser clp = new DefaultParser();
         try {
             CommandLine cl = clp.parse(HttpsConnectionCertificateCheck.createOptions(), args);
-            if (cl.hasOption("u")) {
+            if (cl.hasOption("u") && cl.hasOption("p")) {
+                String opt = cl.getOptionValue("p");
+                PRINT_CERTIFICATES = Boolean.parseBoolean(opt);
                 PARSED_CMDLINE_URL = cl.getOptionValue("u");
-            } else if (cl.hasOption("URL")) {
-                PARSED_CMDLINE_URL = cl.getOptionValue("URL");
+            } else if (cl.hasOption("u")) {
+                PARSED_CMDLINE_URL = cl.getOptionValue("u");
             } else {
                 HttpsConnectionCertificateCheck.help();
                 System.exit(1);
@@ -87,20 +92,22 @@ public class HttpsConnectionCertificateCheck {
             try {
                 System.out.println("Response Code : " + connection.getResponseCode());
                 System.out.println("Cipher Suite : " + connection.getCipherSuite());
-                System.out.println("\n");
 
-                Certificate[] certs = connection.getServerCertificates();
-                for (Certificate cert : certs) {
-                    System.out.println("Certificate Type : " + cert.getType());
+                if (PRINT_CERTIFICATES) {
+                    System.out.println("\n");
+                    Certificate[] certs = connection.getServerCertificates();
+                    for (Certificate cert : certs) {
+                        System.out.println("Certificate Type : " + cert.getType());
 
-                    System.out.println("Certificate Hash Code : " + cert.hashCode());
-                    System.out.println("Certificate Public Key Algorithm : "
-                            + cert.getPublicKey().getAlgorithm());
-                    System.out.println("Certificate Public Key Format : "
-                            + cert.getPublicKey().getFormat());
-                    System.out.println("\n~~~~~~~~~~~~~~~~~~~ BEGIN: Certificate ~~~~~~~~~~~~~~~~~~~~~~~~");
-                    System.out.println(cert.toString());
-                    System.out.println("\n~~~~~~~~~~~~~~~~~~~ END: Certificate ~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+                        System.out.println("Certificate Hash Code : " + cert.hashCode());
+                        System.out.println("Certificate Public Key Algorithm : "
+                                + cert.getPublicKey().getAlgorithm());
+                        System.out.println("Certificate Public Key Format : "
+                                + cert.getPublicKey().getFormat());
+                        System.out.println("\n~~~~~~~~~~~~~~~~~~~ BEGIN: Certificate ~~~~~~~~~~~~~~~~~~~~~~~~");
+                        System.out.println(cert.toString());
+                        System.out.println("\n~~~~~~~~~~~~~~~~~~~ END: Certificate ~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+                    }
                 }
             } catch (SSLHandshakeException e) {
                 System.err.println("Please check the ciphers on the certificate to see if they are supported in your JDK version.");
@@ -128,7 +135,25 @@ public class HttpsConnectionCertificateCheck {
      */
     private static Options createOptions() {
         Options options = new Options();
-        options.addOption("u", "URL", true, "The URL to checked");
+
+        Option url = Option.builder("u")
+                .argName("url")
+                .longOpt("URL")
+                .hasArg()
+                .desc("The URL to be checked")
+                .required()
+                .build();
+
+        Option printcerts = Option.builder("p")
+                .argName("boolean")
+                .longOpt("printcerts")
+                .desc("(true/false) Prints out certificates found")
+                .required(false)
+                .hasArg()
+                .build();
+
+        options.addOption(url);
+        options.addOption(printcerts);
         return options;
     }
 
