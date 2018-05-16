@@ -7,6 +7,12 @@
     <artifactId>https-certificate-check</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
+    <url>https://github.com/jyeary/https-certificate-check</url>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
     <inceptionYear>2018</inceptionYear>
     <organization>
         <name>Blue Lotus Software, LLC.</name>
@@ -35,6 +41,11 @@
             <comments>A business-friendly OSS license.</comments>
         </license>
     </licenses>
+    <scm>
+        <connection>scm:git:git://github.com/jyeary/https-certificate-check.git</connection>
+        <developerConnection>scm:git:ssh://github.com/jyeary/https-certificate-check.git</developerConnection>
+        <url>https://github.com/jyeary/https-certificate-check</url>
+    </scm>
     <dependencies>
         <dependency>
             <groupId>commons-cli</groupId>
@@ -42,11 +53,7 @@
             <version>1.4</version>
         </dependency>
     </dependencies>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
-    </properties>
+  
     <build>
         <plugins>
             <plugin>
