@@ -1,9 +1,16 @@
 # https-certificate-check
 A simple tool to check connectivity via HTTPS and display certificate information.
 ## Purpose
-This is a command line utility written in Java to check the connectivity and certificates on a machine. The application will 
-throw an exception to indicate if it can not make a connection to the target server. If the application is successful, it 
+This is a command line utility written in Java to check the connectivity and certificates on a machine. The application will
+throw an exception to indicate if it can not make a connection to the target server. If the application is successful, it
 indicates a 200 OK and displays the negotiated cipher.
+##Build
+To build the project as a simple super-jar, run the following command:
+```
+mvn clean compile assembly:single
+```
+This produces a jar that can be run from any location. This compiles the code and adds all of the required libraries into the jar. This avoids messy separate library dependencies when you need to test it on a remote machine.
+
 ## Usage
 Run the application using the **$JAVA_HOME** configured for the application being tested.
 ### help
